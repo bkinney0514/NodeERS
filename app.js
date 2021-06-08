@@ -1,111 +1,78 @@
 //imports
 const express = require('express')
 const app = express()
+const path = require('path'); 
+const {MongoClient} = require ('mongodb');
 const { readFileSync } = require('fs')
 const http = require('http')
 
+const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
+const { createRmb } = require('./mongodb')
 
-//get html
-const empHomepage = readFileSync('./html/empHome.html')
-const manHomepage = readFileSync('./html/manHome.html')
-const pending = readFileSync('./html/pending.html')
-const resolved = readFileSync('./html/resolved.html')
-const emprequest = readFileSync('./html/empRequest.html')
-const employees=  readFileSync('./html/employees.html')
+// ----------------------------------------------HTML loading -----------------------------------------------------------------
+//index page
+app.get('/', (req, res) => {
+    res.status(200).sendFile(path.resolve(__dirname, './html/index.html'))
+})
 
+//emp home page
+app.get('/emphome', (req, res) => {
+    res.status(200).sendFile(path.resolve(__dirname, './html/empHome.html'))
+})
 
-const server = http.createServer((req,res) => {
-    const url = req.url
-    const id = req.params; 
+//manager home page
+app.get('/manager', (req,res) => { 
+    res.status(200).sendFile(path.resolve(__dirname, './html/manHome.html'))
+})
 
-    //Employee home page
-    if (url === '/') { 
-        res.writeHead(200, {'content-type':'text/html'})
-        res.write(empHomepage)
-        res.end()
-    } 
+//managers - view all pending requests
+app.get('/manager/pending', (req, res) => { 
+    res.status(200).sendFile(path.resolve(__dirname, './html/pending.html'))
+})
 
-    //Manager home page 
-    else if (url === '/manager') { 
-        res.writeHead(200, {'content-type':'text/html'})
-        res.write(manHomepage)
-        res.end()
-    }
+//managers - view all resolved requests
+app.get('/manager/resolved', (req, res) => { 
+    res.status(200).sendFile(path.resolve(__dirname, './html/resolved.html'))
+})
 
-    //All Pending Requests
-    else if (url === '/pending') { 
-        res.writeHead(200, {'content-type':'text/html'})
-        res.write(pending)
-        res.end()
-    } 
+// view requests by employee
+app.get('/requests/:id',(req,res) =>{
+    res.status(200).sendFile(path.resolve(__dirname, './html/empRequest.html'))
+})
 
-    //All Resolved Requests
-    else if (url === '/resolved') { 
-        res.writeHead(200, {'content-type':'text/html'})
-        res.write(resolved)
-        res.end()
-    }
+// view all employees
+app.get('/employees',(req,res) =>{
+    res.status(200).sendFile(path.resolve(__dirname, './html/employees.html'))
+})
 
-    //View all employees
-    else if (url === '/employees') { 
-        res.writeHead(200, {'content-type':'text/html'})
-        res.write(employees)
-        res.end()
-    }
+//404 handling
+app.get('*', (req,res) => { 
+    res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
+})
 
-    //Requests by employee id
-    else if (url === `/requests/${id}`) {
-        
-        // const ingleID = requests.find(request => {XMLHttpRequestEventTarget.id === 1});
-        res.writeHead(200, {'content-type':'text/html'})
-        res.write(emprequest)
-        res.end()
-    }
+//// ----------------------------------------------CRUD operations --------------------------------------------------------------
 
-    //404
-    else { 
-        res.writeHead(404, {'content-type':'text/html'})
-        res.write('<h1>Page Not Found</h1>')
-        res.end()
+app.post('/employee/newrmb', (req, res) => { 
+    const { amount, reason } = req.body
+
+    try { 
+        client.connect();
+
+        createRmb(client, {
+            // empname: empname, 
+            amount: amount, 
+            reason: reason,  
+            status: 'pending', 
+            comment: ''
+        })
+    } catch (e) {
+        console.error(e); 
+    } finally { 
+        client.close(); 
     }
 })
 
-// app.get('/', (req,res) => {
-//     res.writeHead(200, {'content-type':'text/html'})
-//     res.write(empHomepage)
-//     res.end()
-// })
-
-// app.get ('/manager', (req,res) => { 
-//     res.writeHead(200, {'content-type':'text/html'})
-//     res.write(manHomepage)
-//     res.end()
-// })
-
-// app.get('/pending', (req,res) => { 
-//     res.writeHead(200, {'content-type':'text/html'})
-//     res.write(pending)
-//     res.end()
-// })
-
-// app.get('/resolved', (req,res) => { 
-//     res.writeHead(200, {'content-type':'text/html'})
-//     res.write(resolved)
-//     res.end()
-// })
-
-// app.get ('/requests/:id', (req,res) => { 
-//     res.writeHead(200, {'content-type':'text/html'})
-//     res.write(emprequest)
-//     res.end()
-// })
-
-// app.get ('/employees', (req,res) => { 
-//     res.writeHead(200, {'content-type':'text/html'})
-//     res.write(employees)
-//     res.end()
-// })
-
-server.listen(5000, () => {
+app.listen(5000, () => {
     console.log('Server is listening on port 5000...')
 })
