@@ -2,13 +2,20 @@
 const express = require('express')
 const app = express()
 const path = require('path'); 
+const bodyParser = require('body-parser');;
 const {MongoClient} = require ('mongodb');
 const { readFileSync } = require('fs')
 const http = require('http')
 
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
-const { createRmb } = require('./mongodb')
+
+const { createRmb } = require('./mongodb');
+const { urlencoded } = require('express');
+
+// --------------------------------------------Static/Middleware--------------------------------------------------------------
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 
 // ----------------------------------------------HTML loading -----------------------------------------------------------------
 //index page
@@ -53,26 +60,34 @@ app.get('*', (req,res) => {
 
 //// ----------------------------------------------CRUD operations --------------------------------------------------------------
 
-app.post('/employee/newrmb', (req, res) => { 
-    const { amount, reason } = req.body
+app.post('/emphome/newrmb', (req, res) => { 
+    const { empname, amount, reason } = req.body;
+    console.log(req.body)
+    
+    const result = createRmb(client, {
+        empname: empname, 
+        amount: amount, 
+        reason: reason,  
+        status: 'pending', 
+        comment: ''
+    })
 
-    try { 
-        client.connect();
-
-        createRmb(client, {
-            // empname: empname, 
-            amount: amount, 
-            reason: reason,  
-            status: 'pending', 
-            comment: ''
-        })
-    } catch (e) {
-        console.error(e); 
-    } finally { 
-        client.close(); 
+    if (result) { 
+        res.status(200).send('new rmb created successfully')
+    } else {
+        res.status(500).send('unable to create request')
     }
+
+    
 })
 
 app.listen(5000, () => {
+    try {
+        client.connect();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        client.close();
+    }
     console.log('Server is listening on port 5000...')
 })
