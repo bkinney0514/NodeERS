@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +9,11 @@
     <!-- Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
         type="text/css">
+    <script>
+        
+    </script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Navbar</a>
@@ -21,7 +26,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
-                 <!--This leads to the home page, so they are obsolete at the moment -->
+                <!--This leads to the home page, so they are obsolete at the moment -->
                 <!-- <li class="nav-item active">
                     <a class="nav-link" href="/">Employee Login <span class="sr-only">(current)</span></a>
                 </li>
@@ -38,12 +43,14 @@
         <p class="lead">The Expense Reimbursement System</p>
         <hr class="my-4">
         <!-- Starting of Creating of requests -->
-        <form> <!-- We will need to implement a form action in here to pass the information -->
+        <!-- Action should be confirmation page? -->
+        <form id="requestForm" action="/emphome/newrmb" method="post">
+            <!-- We will need to implement a form action in here to pass the information -->
             <p class="lead">Create a new request:</p>
-            Your Name: <input type="text" id="empname"> <br>
-            Reason: <input type="text" id="reason"> <br>
-            Amount: <input type="number" id="amount"> <br>
-            <input type="button" value="Submit">
+            Your Name: <input type="text" id="empname" name="empname"> <br>
+            Reason: <input type="text" id="reason" name="reason"> <br>
+            Amount: <input type="number" id="amount" name="amount"> <br>
+            <input type="submit" value="Submit">
         </form>
         <div>
             <p class="lead">
@@ -55,20 +62,14 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
+                            <th>Name</th>
+                            <th>Reason</th>
+                            <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <th scope="row">1</th>
-                            <td>Table cell</td>
-                            <td>Table cell</td>
-                            <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
@@ -78,32 +79,27 @@
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
-                            <td>Table cell</td>
-                            <td>Table cell</td>
-                            <td>Table cell</td>
                         </tr>
                         <tr>
                             <th scope="row">3</th>
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
-                            <td>Table cell</td>
-                            <td>Table cell</td>
-                            <td>Table cell</td>
                         </tr>
                     </tbody>
                 </table>
+            </div>
         </div>
-    </div>
-    <br>
-    <hr>
-    <br>
-    <div class="row">
-        <div class="text-center col-lg-6 offset-lg-3">
-            <h4>Footer </h4>
-            <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
+        <br>
+        <hr>
+        <br>
+        <div class="row">
+            <div class="text-center col-lg-6 offset-lg-3">
+                <h4>Footer </h4>
+                <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
+            </div>
         </div>
-    </div>
     </div>
 </body>
+
 </html>

@@ -22,9 +22,12 @@ const { createRmb,
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+  }));
 // ----------------------------------------------HTML loading -----------------------------------------------------------------
 //index page
 app.get('/', (req, res) => {
@@ -183,11 +186,26 @@ app.put('/deny/:id', (req, res) => {
     })
 })
 
+//Gabe's Wild exploration with sending information to Mongodb
+app.post('/empHome', function(req, res) {
+    const { empname, amount, reason } = req.body;
+    const newreq = 
+        { empname: empname, 
+        amount: amount,
+        reason: reason} 
+        // Testing purposes
+    // console.log(empname) 
+    // console.log(reason)  
+    // console.log(amount)   
+    res.send(newreq)
+});
+
 //404 handling
 app.get('*', (req,res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
 })
 
+//Heroku conflicts?
 app.listen(5000, () => {
     try {
         client.connect();
