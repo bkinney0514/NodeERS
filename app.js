@@ -7,6 +7,7 @@ const {MongoClient} = require ('mongodb');
 const { readFileSync } = require('fs')
 const http = require('http')
 
+const port = process.env.PORT || 5000
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
 
@@ -81,7 +82,7 @@ app.post('/emphome/newrmb', (req, res) => {
     
 })
 
-app.listen(5000, () => {
+app.listen(port, () => {
     try {
         client.connect();
     } catch (e) {
