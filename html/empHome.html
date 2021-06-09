@@ -49,10 +49,8 @@
             Amount: <input type="number" id="amount" name="amount" required> <br>
             <input type="button" id="rmbButton" value="Submit">
         <div>
-            <p class="lead">
-                <a class="badge badge-info" href="requests/:id" role="button">View Your Requests</a>
-            </p>
-            <h2> Will we make this a dynamic table?</h2>
+            
+            <h2>Your Requests:</h2>
             <div class="table-responsive col-lg-9">
                 <table class="table table-bordered">
                     <thead>
@@ -114,13 +112,6 @@
                 let table = "<tbody class=\"tabledata\">"; 
                 //sets the value of the textbox so you can't request under a different user
                 for (let i = 0; i < data.length; i++) {
-                    //         <th>#</th>
-                    //         <th>Name</th>
-                    //         <th>Reason</th>
-                    //         <th>Amount</th>
-                    //         <th>Status</th>
-                    //         <th>Comments</th>
-                    //table+= "<tr><th scope=\"row\">1</th>";
                         table+= `<td>${data[i]._id}</td>`;
                         table+= `<td>${data[i].empname}</td>`;
                         table+= `<td>${data[i].reason}</td>`;
