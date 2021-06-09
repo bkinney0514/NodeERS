@@ -1,4 +1,7 @@
 //imports
+// import 'regenerator-runtime/runtime';
+// import axios from 'axios';
+
 const express = require('express')
 const app = express()
 const path = require('path'); 
@@ -7,7 +10,9 @@ const {MongoClient} = require ('mongodb');
 const { readFileSync } = require('fs')
 const http = require('http')
 const mongod = require('mongodb')
+// const axios = require('axios').default
 
+const port = process.env.PORT || 5000
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
 
@@ -22,9 +27,12 @@ const { createRmb,
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({extended: true}))
 app.use(express.json())
-
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+  }));
 // ----------------------------------------------HTML loading -----------------------------------------------------------------
 //index page
 app.get('/', (req, res) => {
@@ -183,12 +191,26 @@ app.put('/deny/:id', (req, res) => {
     })
 })
 
+//Gabe's Wild exploration with sending information to Mongodb
+app.post('/empHome', function(req, res) {
+    const { empname, amount, reason } = req.body;
+    const newreq = 
+        { empname: empname, 
+        amount: amount,
+        reason: reason} 
+        // Testing purposes
+    // console.log(empname) 
+    // console.log(reason)  
+    // console.log(amount)   
+    res.send(newreq)
+});
+
 //404 handling
 app.get('*', (req,res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
 })
 
-app.listen(5000, () => {
+app.listen(port, () => {
     try {
         client.connect();
     } catch (e) {
