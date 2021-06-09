@@ -35,4 +35,33 @@ function createRmb(client, newRmb) {
     return result; 
 }
 
-module.exports = { createRmb }
+function viewEmpRequests(client, employee) { 
+    const results = client.db(data).collection(rmbcoll).find
+    ({empname: employee}).toArray()
+
+    console.log(results)
+
+    return results;
+}
+
+function empViewPending(client, employee) { 
+    const results = client.db(data).collection(rmbcoll).find({
+        empname: employee, 
+        status: "pending"
+    }).toArray()
+
+    console.log(results)
+    return results; 
+}
+
+function approve(client, id, newStatus){
+    const result = client.db(data).collection(rmbcoll)
+    .updateOne({_id: id},{$set: newStatus});
+
+    console.log(`${result.matchedCount}, documents matched query`)
+    console.log(`${result.modifiedCount}, documents were changed`)
+    console.log(result)
+    return result;
+}
+
+module.exports = { createRmb, viewEmpRequests, empViewPending, approve }

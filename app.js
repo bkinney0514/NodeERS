@@ -10,7 +10,10 @@ const http = require('http')
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
 
-const { createRmb } = require('./mongodb');
+const { createRmb, 
+    viewEmpRequests, 
+    empViewPending,
+    approve } = require('./mongodb');
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
@@ -53,10 +56,7 @@ app.get('/employees',(req,res) =>{
     res.status(200).sendFile(path.resolve(__dirname, './html/employees.html'))
 })
 
-//404 handling
-app.get('*', (req,res) => { 
-    res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
-})
+
 
 //// ----------------------------------------------CRUD operations --------------------------------------------------------------
 
@@ -78,7 +78,47 @@ app.post('/emphome/newrmb', (req, res) => {
         res.status(500).send('unable to create request')
     }
 
-    
+
+})
+
+app.get('/emprequests/:name', (req, res) => { 
+    const name = req.params.name;
+    const results = viewEmpRequests(client, name).then((results) => {
+        if (results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('yikerino')
+        }
+    })
+})
+
+app.get('/pending/:name', (req, res) => { 
+    const name = req.params.name;
+    const results = empViewPending(client, name).then((results) => { 
+        if (results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('error')
+        }
+    })
+})
+
+//Manager update request status
+app.put('/approve/:id/:status', (req, res) => {
+    const id = req.params.id;
+    const newStatus = req.params.status;
+    const result = approve(client, id, {status: newStatus}).then((result) =>{
+        if (result) {
+            res.status(200).send(result)
+        } else {
+            res.status(500).send('oh yikes')
+        }
+    })
+})
+
+//404 handling
+app.get('*', (req,res) => { 
+    res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
 })
 
 app.listen(5000, () => {
