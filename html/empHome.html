@@ -1,26 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Homepage</title>
+    <!-- Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
+        type="text/css">
 </head>
 <body>
-    <h1>Welcome to the Employee Home Page</h1>
-
-    <!-- Starting of Creating of requests -->
-<form>
-        <p class="lead">Create a new request:</p>
-        Reason: <input type="text" id="reason"> <br> 
-        Amount: <input type="number" id="amount"> <br> 
-        <input type="button" value="Submit">
-    </form>
-    <!-- Ending of Creating of requests -->
-    
-    
-    <p class="lead">Your requests:</p>
-    <!-- Make some sort of magic logic here to show requests per user in table -->
-    <!-- Magic reference video: https://www.youtube.com/watch?v=Qo-iQNXDf1c -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                 <!--This leads to the home page, so they are obsolete at the moment -->
+                <!-- <li class="nav-item active">
+                    <a class="nav-link" href="/">Employee Login <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/">Manager Login<span class="sr-only">(current)</span></a>
+                </li> -->
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+            </form>
+        </div>
+    </nav>
+    <div class="jumbotron jumbotron-fluid text-center">
+        <h1 class="display-4">Employee Home Page&nbsp;</h1>
+        <p class="lead">The Expense Reimbursement System</p>
+        <hr class="my-4">
+        <!-- Starting of Creating of requests -->
+        <form> <!-- We will need to implement a form action in here to pass the information -->
+            <p class="lead">Create a new request:</p>
+            Your Name: <input type="text" id="empname"> <br>
+            Reason: <input type="text" id="reason"> <br>
+            Amount: <input type="number" id="amount"> <br>
+            <input type="button" value="Submit">
+        </form>
+        <div>
+            <p class="lead">
+                <a class="badge badge-info" href="requests/:id" role="button">View Your Requests</a>
+            </p>
+            <h2> Will we make this a dynamic table?</h2>
+            <div class="table-responsive col-lg-9">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Table heading</th>
+                            <th>Table heading</th>
+                            <th>Table heading</th>
+                            <th>Table heading</th>
+                            <th>Table heading</th>
+                            <th>Table heading</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                            <td>Table cell</td>
+                        </tr>
+                    </tbody>
+                </table>
+        </div>
+    </div>
+    <br>
+    <hr>
+    <br>
+    <div class="row">
+        <div class="text-center col-lg-6 offset-lg-3">
+            <h4>Footer </h4>
+            <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
+        </div>
+    </div>
+    </div>
 </body>
 </html>
