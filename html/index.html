@@ -66,6 +66,7 @@
                   let option;
                   for (let i = 0; i < data.length; i++) {
                      option = document.createElement('option');
+                     option.id = data[i].name;
                      option.text = data[i].name;
                      option.value = data[i].name;
                      dropdown.add(option);
@@ -97,6 +98,20 @@
       </div>
    </div>
    </div>
+   <script>
+      document.getElementById('employee-dropdown').addEventListener("change", store)
+      function store() { 
+         const empname = document.getElementById('employee-dropdown').value
+         if(typeof(Storage) !== "undefined") { 
+            //store emp name
+            localStorage.setItem("empname", empname);
+            console.log(localStorage.getItem("empname"))
+         } else { 
+            //send to html page that says they need to use a browser with local storage support
+         }
+      }
+      
+</script>
 </body>
 
 </html>

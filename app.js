@@ -1,4 +1,7 @@
 //imports
+// import 'regenerator-runtime/runtime';
+// import axios from 'axios';
+
 const express = require('express')
 const app = express()
 const path = require('path'); 
@@ -7,6 +10,7 @@ const {MongoClient} = require ('mongodb');
 const { readFileSync } = require('fs')
 const http = require('http')
 const mongod = require('mongodb')
+// const axios = require('axios').default
 
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 

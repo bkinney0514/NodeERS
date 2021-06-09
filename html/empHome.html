@@ -9,9 +9,7 @@
     <!-- Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
         type="text/css">
-    <script>
-        
-    </script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
@@ -44,14 +42,12 @@
         <hr class="my-4">
         <!-- Starting of Creating of requests -->
         <!-- Action should be confirmation page? -->
-        <form id="requestForm" action="/emphome/newrmb" method="post">
             <!-- We will need to implement a form action in here to pass the information -->
             <p class="lead">Create a new request:</p>
-            Your Name: <input type="text" id="empname" name="empname"> <br>
-            Reason: <input type="text" id="reason" name="reason"> <br>
-            Amount: <input type="number" id="amount" name="amount"> <br>
-            <input type="submit" value="Submit">
-        </form>
+            <!--Name: <input type="text" id="empname" name="empname" disabled> <br>-->
+            Reason: <input type="text" id="reason" name="reason" required> <br>
+            Amount: <input type="number" id="amount" name="amount" required> <br>
+            <input type="button" id="rmbButton" value="Submit">
         <div>
             <p class="lead">
                 <a class="badge badge-info" href="requests/:id" role="button">View Your Requests</a>
@@ -61,27 +57,34 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>ID</th>
                             <th>Name</th>
                             <th>Reason</th>
                             <th>Amount</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="tabledata">
                         <tr>
-                            <th scope="row">1</th>
+                            <!-- <th scope="row">1</th> -->
+                            <td>Table cell</td>
+                            <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
                         </tr>
                         <tr>
-                            <th scope="row">2</th>
+                            <!-- <th scope="row">2</th> -->
+                            <td>Table cell</td>
+                            <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
                         </tr>
                         <tr>
-                            <th scope="row">3</th>
+                            <!-- <th scope="row">3</th> -->
+                            <td>Table cell</td>
+                            <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
@@ -100,6 +103,55 @@
             </div>
         </div>
     </div>
+    <script>
+        const tableelm = document.querySelector('.tabledata')
+        //test to make sure local storage can still be accessed
+        //console.log(localStorage.getItem("empname"))
+
+        const getData = async () => { 
+            try {
+                const { data } = await axios.get(`/emprequests/${localStorage.getItem("empname")}`)
+                let table = "<tbody class=\"tabledata\">"; 
+                //sets the value of the textbox so you can't request under a different user
+                for (let i = 0; i < data.length; i++) {
+                    //         <th>#</th>
+                    //         <th>Name</th>
+                    //         <th>Reason</th>
+                    //         <th>Amount</th>
+                    //         <th>Status</th>
+                    //         <th>Comments</th>
+                    //table+= "<tr><th scope=\"row\">1</th>";
+                        table+= `<td>${data[i]._id}</td>`;
+                        table+= `<td>${data[i].empname}</td>`;
+                        table+= `<td>${data[i].reason}</td>`;
+                        table+= `<td>${data[i].amount}</td>`;
+                        table+= `<td>${data[i].status}</td>`;
+                        table+= "</tr>"
+                } 
+                table +="</tbody>"
+                tableelm.innerHTML = table
+            } catch (error) { 
+                console.log(error)
+                tableelm.innerHTML = 'User has no requests!'
+            }
+        }
+        getData()
+
+        // Create new reimbursement
+        document.getElementById("rmbButton").addEventListener("click", async () => {
+            try{ 
+                await axios.post('/emphome/newrmb', {
+                    empname: localStorage.getItem("empname"), 
+                    amount: document.getElementById("amount").value,
+                    reason: document.getElementById("reason").value
+                })
+                console.log("new rmb created successfully")
+            } catch (error) { 
+                console.log(error)
+            }
+        })
+        
+    </script>
 </body>
 
 </html>
