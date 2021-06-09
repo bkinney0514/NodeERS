@@ -35,13 +35,40 @@ function createRmb(client, newRmb) {
     return result; 
 }
 
+function viewEmps(client) { 
+    const results = client.db(data).collection(empcoll).find
+    ({ title: "Employee" }).toArray()
+    
+    console.log(results)
+
+    return results; 
+}
+
+function viewPending(client) { 
+    const results = client.db(data).collection(rmbcoll).find
+    ({ status: "pending" }).toArray()
+    
+    console.log(results)
+
+    return results; 
+}
+
+function viewResolved(client) {
+    
+    const results = client.db(data).collection(rmbcoll).find(
+        {status: {$ne: "pending"}} ).toArray()
+      
+
+    console.log(results)
+    return results; 
+}
+
 function viewEmpRequests(client, employee) { 
     const results = client.db(data).collection(rmbcoll).find
     ({empname: employee}).toArray()
 
     console.log(results)
-
-    return results;
+    return results
 }
 
 function empViewPending(client, employee) { 
@@ -54,14 +81,34 @@ function empViewPending(client, employee) {
     return results; 
 }
 
-function approve(client, id, newStatus){
-    const result = client.db(data).collection(rmbcoll)
-    .updateOne({_id: id},{$set: newStatus});
+function empViewResolved(client, employee) {
+    
+    const results = client.db(data).collection(rmbcoll).find({
+        status: {$ne: "pending"}, 
+        empname: employee}).toArray()
+      
 
-    console.log(`${result.matchedCount}, documents matched query`)
-    console.log(`${result.modifiedCount}, documents were changed`)
+    console.log(results)
+    return results; 
+}
+
+function resolve(client, id, newStatus){
+    
+    const result = client.db(data).collection(rmbcoll).updateOne({
+        _id: id},
+        {$set: newStatus}
+    );
     console.log(result)
     return result;
 }
 
-module.exports = { createRmb, viewEmpRequests, empViewPending, approve }
+
+
+module.exports = { createRmb, 
+    viewEmps, 
+    viewPending, 
+    viewResolved, 
+    viewEmpRequests,
+    empViewPending,
+    empViewResolved,
+    resolve }

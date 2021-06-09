@@ -6,14 +6,19 @@ const bodyParser = require('body-parser');;
 const {MongoClient} = require ('mongodb');
 const { readFileSync } = require('fs')
 const http = require('http')
+const mongod = require('mongodb')
 
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
 
 const { createRmb, 
-    viewEmpRequests, 
+    viewEmps, 
+    viewPending, 
+    viewResolved, 
+    viewEmpRequests,
     empViewPending,
-    approve } = require('./mongodb');
+    empViewResolved,
+    resolve } = require('./mongodb');
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
@@ -39,6 +44,7 @@ app.get('/manager', (req,res) => {
 //managers - view all pending requests
 app.get('/manager/pending', (req, res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/pending.html'))
+
 })
 
 //managers - view all resolved requests
@@ -60,6 +66,7 @@ app.get('/employees',(req,res) =>{
 
 //// ----------------------------------------------CRUD operations --------------------------------------------------------------
 
+//employee submit new rmb request
 app.post('/emphome/newrmb', (req, res) => { 
     const { empname, amount, reason } = req.body;
     console.log(req.body)
@@ -77,12 +84,44 @@ app.post('/emphome/newrmb', (req, res) => {
     } else {
         res.status(500).send('unable to create request')
     }
-
-
 })
 
+//manager view all employees
+app.get('/manager/employees', (req, res) => { 
+    const results = viewEmps(client).then((results)=>{
+        if (results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('yikes')
+        }
+    })    
+})
+
+//manager view all pending requests
+app.get('/pending', (req, res) => {
+    const results = viewPending(client).then((results)=>{
+        if(results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('YIKES!')
+        }
+    })
+})
+
+//manager view all resolved requests
+app.get('/resolved', (req, res) => { 
+    const results = viewResolved(client).then((results) => { 
+        if (results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('yikeroni')
+        }
+    })
+})
+
+//Manager view requests by employee name.
 app.get('/emprequests/:name', (req, res) => { 
-    const name = req.params.name;
+    const name = req.params.name; 
     const results = viewEmpRequests(client, name).then((results) => {
         if (results.length > 0) { 
             res.status(200).send(results)
@@ -92,6 +131,7 @@ app.get('/emprequests/:name', (req, res) => {
     })
 })
 
+//Employee view their own pending requests
 app.get('/pending/:name', (req, res) => { 
     const name = req.params.name;
     const results = empViewPending(client, name).then((results) => { 
@@ -103,11 +143,38 @@ app.get('/pending/:name', (req, res) => {
     })
 })
 
+//Employee view their own resolved requests
+app.get('/resolved/:name', (req, res) => { 
+    const name = req.params.name; 
+    const results = empViewResolved(client, name).then((results) => {
+        if (results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('error')
+        }
+    })
+})
+
 //Manager update request status
-app.put('/approve/:id/:status', (req, res) => {
-    const id = req.params.id;
-    const newStatus = req.params.status;
-    const result = approve(client, id, {status: newStatus}).then((result) =>{
+app.put('/resolve/:id/:status', (req, res) => {
+    //const id = req.params.id;
+    const id = mongod.ObjectID(req.params.id)
+    // const newStatus = 'approved';
+    const status = req.params.status;
+    const result = resolve(client, id, {status: status}).then((result) =>{
+        if (result) {
+            res.status(200).send(result)
+        } else {
+            res.status(500).send('oh yikes')
+        }
+    })
+})
+
+app.put('/deny/:id', (req, res) => {
+    //const id = req.params.id;
+    const id = mongod.ObjectID(req.params.id)
+    // const newStatus = 'approved';
+    const result = resolve(client, id, {status: 'approved'}).then((result) =>{
         if (result) {
             res.status(200).send(result)
         } else {
