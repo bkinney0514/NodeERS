@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +9,9 @@
     <!-- Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
         type="text/css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Navbar</a>
@@ -21,7 +24,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
-                 <!--This leads to the home page, so they are obsolete at the moment -->
+                <!--This leads to the home page, so they are obsolete at the moment -->
                 <!-- <li class="nav-item active">
                     <a class="nav-link" href="/">Employee Login <span class="sr-only">(current)</span></a>
                 </li>
@@ -38,35 +41,30 @@
         <p class="lead">The Expense Reimbursement System</p>
         <hr class="my-4">
         <!-- Starting of Creating of requests -->
-        <form> <!-- We will need to implement a form action in here to pass the information -->
+        <!-- Action should be confirmation page? -->
+            <!-- We will need to implement a form action in here to pass the information -->
             <p class="lead">Create a new request:</p>
-            Your Name: <input type="text" id="empname"> <br>
-            Reason: <input type="text" id="reason"> <br>
-            Amount: <input type="number" id="amount"> <br>
-            <input type="button" value="Submit">
-        </form>
+            <!--Name: <input type="text" id="empname" name="empname" disabled> <br>-->
+            Reason: <input type="text" id="reason" name="reason" required> <br>
+            Amount: <input type="number" id="amount" name="amount" required> <br>
+            <input type="button" id="rmbButton" value="Submit">
         <div>
-            <p class="lead">
-                <a class="badge badge-info" href="requests/:id" role="button">View Your Requests</a>
-            </p>
-            <h2> Will we make this a dynamic table?</h2>
+            
+            <h2>Your Requests:</h2>
             <div class="table-responsive col-lg-9">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
-                            <th>Table heading</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Reason</th>
+                            <th>Amount</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="tabledata">
                         <tr>
-                            <th scope="row">1</th>
-                            <td>Table cell</td>
+                            <!-- <th scope="row">1</th> -->
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
@@ -74,8 +72,7 @@
                             <td>Table cell</td>
                         </tr>
                         <tr>
-                            <th scope="row">2</th>
-                            <td>Table cell</td>
+                            <!-- <th scope="row">2</th> -->
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
@@ -83,8 +80,7 @@
                             <td>Table cell</td>
                         </tr>
                         <tr>
-                            <th scope="row">3</th>
-                            <td>Table cell</td>
+                            <!-- <th scope="row">3</th> -->
                             <td>Table cell</td>
                             <td>Table cell</td>
                             <td>Table cell</td>
@@ -93,17 +89,60 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <div class="row">
+            <div class="text-center col-lg-6 offset-lg-3">
+                <h4>Footer </h4>
+                <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
+            </div>
         </div>
     </div>
-    <br>
-    <hr>
-    <br>
-    <div class="row">
-        <div class="text-center col-lg-6 offset-lg-3">
-            <h4>Footer </h4>
-            <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
-        </div>
-    </div>
-    </div>
+    <script>
+        const tableelm = document.querySelector('.tabledata')
+        //test to make sure local storage can still be accessed
+        //console.log(localStorage.getItem("empname"))
+
+        const getData = async () => { 
+            try {
+                const { data } = await axios.get(`/emprequests/${localStorage.getItem("empname")}`)
+                let table = "<tbody class=\"tabledata\">"; 
+                //sets the value of the textbox so you can't request under a different user
+                for (let i = 0; i < data.length; i++) {
+                        table+= `<td>${data[i]._id}</td>`;
+                        table+= `<td>${data[i].empname}</td>`;
+                        table+= `<td>${data[i].reason}</td>`;
+                        table+= `<td>${data[i].amount}</td>`;
+                        table+= `<td>${data[i].status}</td>`;
+                        table+= "</tr>"
+                } 
+                table +="</tbody>"
+                tableelm.innerHTML = table
+            } catch (error) { 
+                console.log(error)
+                tableelm.innerHTML = 'User has no requests!'
+            }
+        }
+        getData()
+
+        // Create new reimbursement
+        document.getElementById("rmbButton").addEventListener("click", async () => {
+            try{ 
+                await axios.post('/emphome/newrmb', {
+                    empname: localStorage.getItem("empname"), 
+                    amount: document.getElementById("amount").value,
+                    reason: document.getElementById("reason").value
+                })
+                console.log("new rmb created successfully")
+            } catch (error) { 
+                console.log(error)
+            }
+        })
+        
+    </script>
 </body>
+
 </html>

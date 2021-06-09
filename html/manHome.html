@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +9,9 @@
     <!-- Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
         type="text/css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -40,26 +43,31 @@
         <h1 class="display-4">Welcome to the Manager Home Page</h1>
         <p class="lead">The Expense Reimbursement System</p>
         <hr class="my-4">
-        
-        
-      <div>
-		  <p class="lead">
-        <a class="badge badge-info" href="manager/pending" role="button">View Pending Requests</a>
-     </p>
-     <p class="lead">
-        <a class="badge badge-info" href="manager/resolved" role="button">View Resolved Requests</a>
-     </p>
-     <p class="lead">
-        <a class="badge badge-info" href="employees" role="button">View All Employees</a>
-     </p>
-     <p class="lead">
-        <a class="badge badge-info" href="requests/:id" role="button">View One Employee's Requests</a>
-     </p>
-            
-</div>
+
+        <div>
+            <select id="employee-dropdown" name="user"></select>
+        </div>
+
+        <div>
+            <p class="lead">
+                <button class="badge badge-info" id="oneEmp" role="button">View One Employee's Requests</button>
+            </p>
+            <p class="lead">
+                <button class="badge badge-info" id="pending" type="button">View All Pending Requests</button>
+            </p>
+            <p class="lead">
+                <button class="badge badge-info" id="resolved" type="button">View All Resolved Requests</button>
+            </p>
+            <p class="lead">
+                <!-- URL/API for all employees: http://localhost:5000/manager/employees -->
+            </p>
         </div>
     </div>
+    
     <br>
+    <div class="result">
+
+    </div>
     <hr>
     <br>
     <div class="row">
@@ -68,6 +76,174 @@
             <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
         </div>
     </div>
-    </div>
+    
+    <script>
+        let dropdown = document.getElementById('employee-dropdown');
+        dropdown.length = 0;
+
+        let defaultOption = document.createElement('option');
+        defaultOption.text = 'Choose employee';
+
+        dropdown.add(defaultOption);
+        dropdown.selectedIndex = 0;
+        const url = 'http://localhost:5000/manager/employees';
+
+        const request = new XMLHttpRequest();
+        request.open('GET', url, true);
+
+        request.onload = function () {
+            if (request.status === 200) {
+                const data = JSON.parse(request.responseText);
+                let option;
+                for (let i = 0; i < data.length; i++) {
+                    option = document.createElement('option');
+                    option.id = data[i].name;
+                    option.text = data[i].name;
+                    option.value = data[i].name;
+                    dropdown.add(option);
+                }
+            } else {
+                // Reached the server, but it returned an error
+            }
+        }
+
+        request.onerror = function () {
+            console.error('An error occurred fetching the JSON from ' + url);
+        };
+
+        request.send();
+        document.getElementById('employee-dropdown').addEventListener("change", store)
+
+        function store() {
+            const empname = document.getElementById('employee-dropdown').value
+            if (typeof (Storage) !== "undefined") {
+                //store emp name
+                localStorage.setItem("empname", empname);
+                console.log(localStorage.getItem("empname"))
+            } else {
+                //send to html page that says they need to use a browser with local storage support
+            }
+        }
+
+        const tableelm = document.querySelector('.result')
+        //test to make sure local storage can still be accessed
+        //console.log(localStorage.getItem("empname"))
+
+        // ------------------------------------------------One employees request -----------------------------------------------------------------
+        document.getElementById("oneEmp").addEventListener("click", async () => {
+            try {
+                const { data } = await axios.get(`/emprequests/${localStorage.getItem("empname")}`)
+
+                let table = "<tbody class=\"tabledata\"><table class=\"table table-bordered\">";
+                table += "<thead><tr><th>ID</th><th>Name</th><th>Reason</th><th>Amount</th><th>Status</th>";
+                table += "</tr>"
+                table += "</thead>"
+
+
+                //sets the value of the textbox so you can't request under a different user
+                for (let i = 0; i < data.length; i++) {
+                    table += `<td>${data[i]._id}</td>`;
+                    table += `<td>${data[i].empname}</td>`;
+                    table += `<td>${data[i].reason}</td>`;
+                    table += `<td>${data[i].amount}</td>`;
+                    table += `<td>${data[i].status}</td>`;
+                    table += "</tr>"
+                }
+                table += "</tbody>"
+                tableelm.innerHTML = table
+            } catch (error) {
+                console.log(error)
+                tableelm.innerHTML = 'User has no requests!'
+            }
+        })
+
+        // ---------------------------------------------------------All pending requests ---------------------------------------------------------------
+        document.getElementById("pending").addEventListener("click", async () => {
+            try {
+                const { data } = await axios.get(`/pending`)
+
+                let table = "<tbody class=\"tabledata\"><table class=\"table table-bordered\">";
+                table += "<thead><tr><th>ID</th><th>Name</th><th>Reason</th><th>Amount</th><th>Status</th><th>Action</th>";
+                table += "</tr>"
+                table += "</thead>"
+
+
+                //sets the value of the textbox so you can't request under a different user
+                for (let i = 0; i < data.length; i++) {
+                    table += `<td>${data[i]._id}</td>`;
+                    table += `<td>${data[i].empname}</td>`;
+                    table += `<td>${data[i].reason}</td>`;
+                    table += `<td>${data[i].amount}</td>`;
+                    table += `<td>${data[i].status}</td>`;
+                    table += `<td><button onclick="approve('${data[i]._id}', 'approved')" >Approve</button>`;
+                    table += `<button onClick="deny('${data[i]._id}', 'denied')" value="denied">Deny</button>`;
+                    table += "</tr>"
+                }
+                table += "</tbody>"
+                tableelm.innerHTML = table
+            } catch (error) {
+                console.log(error)
+                tableelm.innerHTML = 'No requests at this time!'
+            }
+        })
+        
+
+        function approve(id, status){
+            // id = data[i]._id;
+            
+            try{
+                const { data } = axios.put(`resolve/${id}/${status}`)
+                alert("Request successfully updated!")
+            } catch (error) {
+                console.log(error)
+                alert('Something went wrong, please try again!')
+            }
+            
+        }
+
+        function deny(id, status) { 
+            // id = data[i]._id;
+            
+            try{
+                const { data } = axios.put(`resolve/${id}/${status}`)
+                alert("Request successfully updated!")
+            } catch (error) {
+                console.log(error)
+                alert('Something went wrong, please try again!')
+            }
+            
+        }
+        
+        // ---------------------------------------------------------All resolved requests ---------------------------------------------------------------
+        document.getElementById("resolved").addEventListener("click", async () => {
+            try {
+                const { data } = await axios.get(`/resolved`)
+
+                let table = "<tbody class=\"tabledata\"><table class=\"table table-bordered\">";
+                table += "<thead><tr><th>ID</th><th>Name</th><th>Reason</th><th>Amount</th><th>Status</th>";
+                table += "</tr>"
+                table += "</thead>"
+
+
+                //sets the value of the textbox so you can't request under a different user
+                for (let i = 0; i < data.length; i++) {
+                    table += `<td>${data[i]._id}</td>`;
+                    table += `<td>${data[i].empname}</td>`;
+                    table += `<td>${data[i].reason}</td>`;
+                    table += `<td>${data[i].amount}</td>`;
+                    table += `<td>${data[i].status}</td>`;
+                    table += "</tr>"
+                }
+                table += "</tbody>"
+                tableelm.innerHTML = table
+            } catch (error) {
+                console.log(error)
+                tableelm.innerHTML = 'User has no requests!'
+            }
+        })
+
+
+    </script>
 </body>
+
 </html>
