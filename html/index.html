@@ -10,6 +10,7 @@
    <!-- Bootstrap -->
    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"
       type="text/css">
+      <link rel ="icon" href="https://cdn.discordapp.com/attachments/821418581970911312/852646174875975730/rick_astley.png">
 </head>
 
 <body>
@@ -39,18 +40,56 @@
    </nav>
 
    <div class="jumbotron jumbotron-fluid text-center">
-      <h1 class="display-4">Revature ERS Deployment Site</h1>
+      <h1 class="display-4" id="Header">Revature ERS Deployment Site</h1>
       <p class="lead">The Expense Reimbursement System</p>
       <hr class="my-4">
-      <p>Are an Employee or a Manager?</p>
+      <p>Who are you?</p>
+      <script>
+         function SelectRedirect() {
+            const empname = document.getElementById('employee-dropdown').value
+            if (typeof (Storage) !== "undefined") {
+               //store emp name
+               localStorage.setItem("empname", empname);
+               console.log(localStorage.getItem("empname"))
+            } else {
+               //send to html page that says they need to use a browser with local storage support
+            }
+            // ON selection of section this function will work
+            //alert( document.getElementById('s1').value);
+
+            switch (document.getElementById('employee-dropdown').value) {
+               case "Will":
+                  window.location = "../manager";
+                  break;
+
+               case "Rick":
+                  Header.innerText = "Prepare Yourself..."
+                  
+                  setTimeout(() => { window.location = "https://youtu.be/dQw4w9WgXcQ";},1000)
+
+                
+                  break;
+               /// Can be extended to other different selections of SubCategory //////
+               default:
+                  window.location = "../empHome"; // if the manager isn't selected, go to the employee home page with the selected name queried. 
+                  break;
+            }// end of switch 
+         }
+      </script>
       <p class="lead">
+<<<<<<< HEAD
          <select id="employee-dropdown" name="user">
             <option>Choose Employee</option>
             <option value="Brian">Brian - Employee</option>
             <option value="Gabe">Gabe - Employee</option>
             <option vale="Will">Will - Manager</option>
+=======
+         <select id="employee-dropdown" name="user" onchange="SelectRedirect();">
+>>>>>>> 89792083181f4ab397a9b017024f37db10a18b24
          </select>
+         <!-- SCRIPT FOR POPULATING DROPDOWN MENU -->
          <script>
+<<<<<<< HEAD
             // let dropdown = document.getElementById('employee-dropdown');
             // dropdown.length = 0;
 
@@ -87,9 +126,51 @@
             // };
 
             // request.send();
+=======
+            let dropdown = document.getElementById('employee-dropdown');
+            dropdown.length = 0;
+
+            let defaultOption = document.createElement('option');
+            defaultOption.text = 'Choose employee';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+
+            dropdown.add(defaultOption);
+            dropdown.selectedIndex = 0;
+            const url = '/employeeList';
+
+            const request = new XMLHttpRequest();
+            request.open('GET', url, true);
+
+            request.onload = function () {
+               if (request.status === 200) {
+                  const data = JSON.parse(request.responseText);
+                  let option;
+                  for (let i = 0; i < data.length; i++) {
+                     option = document.createElement('option');
+                     option.id = data[i].name;
+                     option.text = data[i].name;
+                     option.value = data[i].name;
+                     dropdown.add(option);
+                  }
+               } else {
+                  // Reached the server, but it returned an error
+               }
+            }
+
+            request.onerror = function () {
+               console.error('An error occurred fetching the JSON from ' + url);
+            };
+
+            request.send();
+>>>>>>> 89792083181f4ab397a9b017024f37db10a18b24
          </script>
-         <a class="badge badge-info" href="empHome" role="button">Employee</a>
-         <a class="badge badge-danger" href="manager" role="button">Manager</a>
+
+         <!-- Need a login function if value = Will then manHome, else empHome -->
+         <!-- This was our previous method of approach using a button to login -->
+         <!-- <a class="badge badge-info" href="empHome" role="button">Login</a> -->
+
+         <!-- <a class="badge badge-danger" href="manager" role="button">Manager</a> -->
       </p>
    </div>
 
@@ -106,18 +187,92 @@
    </div>
    <script>
       document.getElementById('employee-dropdown').addEventListener("change", store)
-      function store() { 
+      function store() {
          const empname = document.getElementById('employee-dropdown').value
-         if(typeof(Storage) !== "undefined") { 
+         if (typeof (Storage) !== "undefined") {
             //store emp name
             localStorage.setItem("empname", empname);
             console.log(localStorage.getItem("empname"))
-         } else { 
+         } else {
             //send to html page that says they need to use a browser with local storage support
          }
       }
-      
-</script>
+
+   </script>
+   <!-- <style>
+      .jumbotron {
+	         -webkit-animation: color-change-2x 2s linear infinite alternate both;
+	        animation: color-change-2x 2s linear infinite alternate both;
+      }
+      body{
+         -webkit-animation: color-change-3x 2s linear infinite alternate both;
+	        animation: color-change-3x 2s linear infinite alternate both;
+      }
+      /* ----------------------------------------------
+ * Generated by Animista on 2021-6-10 15:52:58
+ * Licensed under FreeBSD License.
+ * See http://animista.net/license for more info. 
+ * w: http://animista.net, t: @cssanimista
+ * ---------------------------------------------- */
+
+/**
+ * ----------------------------------------
+ * animation color-change-2x
+ * ----------------------------------------
+ */
+@-webkit-keyframes color-change-2x {
+   0% {
+    background: #19dcea;
+  }
+  25% {
+    background: #b22cff;
+  }
+  50% {
+    background: #ea2222;
+  }
+  75% {
+    background: #f5be10;
+  }
+  100% {
+    background: #3bd80d;
+  }
+}
+@-webkit-keyframes color-change-3x {
+   0% {
+      background: #3bd80d;
+  }
+  25% {
+   background: #f5be10;
+  }
+  50% {
+    background: #ea2222;
+  }
+  75% {
+   background: #b22cff;
+  }
+  100% {
+   background: #19dcea;
+  }
+}
+@keyframes color-change-3x {
+   0% {
+      background: #3bd80d;
+  }
+  25% {
+   background: #f5be10;
+  }
+  50% {
+    background: #ea2222;
+  }
+  75% {
+   background: #b22cff;
+  }
+  100% {
+   background: #19dcea;
+  }
+}
+
+   </style> -->
 </body>
 
 </html>

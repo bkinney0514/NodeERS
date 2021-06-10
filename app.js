@@ -20,12 +20,15 @@ const cors = require('cors');
 
 const { createRmb, 
     viewEmps, 
+    viewAllEmps,
     viewPending, 
     viewResolved, 
     viewEmpRequests,
     empViewPending,
     empViewResolved,
-    resolve } = require('./mongodb');
+    resolve,
+    clearDB,
+    addEmp } = require('./mongodb');
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
@@ -97,6 +100,23 @@ app.post('/emphome/newrmb', (req, res) => {
     }
 });
 
+//Manager add a new employee
+app.post('/manager/addEmp', (req, res) => { 
+    const { name } = req.body; 
+
+    const result = addEmp(client, 
+        {
+            name: name,
+            title: "Employee"
+        })
+
+    if(result) { 
+        res.status(200).send(`Employee ${name} successfully added!`)
+    } else { 
+        res.status(500).send('Error.')
+    }
+})
+
 //manager view all employees
 app.get('/manager/employees', (req, res) => { 
     const results = viewEmps(client).then((results)=>{
@@ -107,6 +127,8 @@ app.get('/manager/employees', (req, res) => {
         }
     })    
 });
+
+
 
 //manager view all pending requests
 app.get('/pending', (req, res) => {
@@ -141,6 +163,17 @@ app.get('/emprequests/:name', (req, res) => {
         }
     })
 });
+
+//Log in
+app.get('/employeeList', (req, res) => { 
+    const results = viewAllEmps(client).then((results)=>{
+        if (results.length > 0) { 
+            res.status(200).send(results)
+        } else { 
+            res.status(500).send('yikes')
+        }
+    })    
+})
 
 //Employee view their own pending requests
 app.get('/pending/:name', (req, res) => { 
@@ -181,31 +214,28 @@ app.put('/resolve/:id/:status', (req, res) => {
     })
 });
 
-app.put('/deny/:id', (req, res) => {
-    //const id = req.params.id;
-    const id = mongod.ObjectID(req.params.id)
-    // const newStatus = 'approved';
-    const result = resolve(client, id, {status: 'approved'}).then((result) =>{
-        if (result) {
-            res.status(200).send(result)
+// app.put('/deny/:id', (req, res) => {
+//     //const id = req.params.id;
+//     const id = mongod.ObjectID(req.params.id)
+//     // const newStatus = 'approved';
+//     const result = resolve(client, id, {status: 'approved'}).then((result) =>{
+//         if (result) {
+//             res.status(200).send(result)
+//         } else {
+//             res.status(500).send('oh yikes')
+//         }
+//     })
+// })
+
+//delete all reimbursements
+app.get('/clear', (req,res) => {
+    const results = clearDB(client).then((results) =>{
+        if (results) {
+            res.status(200).send('database cleared')
         } else {
             res.status(500).send('oh yikes')
         }
     })
-});
-
-//Gabe's Wild exploration with sending information to Mongodb
-app.post('/empHome', function(req, res) {
-    const { empname, amount, reason } = req.body;
-    const newreq = 
-        { empname: empname, 
-        amount: amount,
-        reason: reason} 
-        // Testing purposes
-    // console.log(empname) 
-    // console.log(reason)  
-    // console.log(amount)   
-    res.send(newreq)
 });
 
 //404 handling
@@ -221,5 +251,10 @@ app.listen(port, () => {
     } finally {
         client.close();
     }
+<<<<<<< HEAD
     console.log(`Server is listening on port ${port}...`)
 });
+=======
+    console.log('Server is listening on port: ' + port)
+})
+>>>>>>> 89792083181f4ab397a9b017024f37db10a18b24

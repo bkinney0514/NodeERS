@@ -61,9 +61,31 @@
             <p class="lead">
                 <!-- URL/API for all employees: http://localhost:5000/manager/employees -->
             </p>
+            <!-- Creating new employee -->
+            <p class="lead">Create a new employee:</p>
+            Name: <input type="text" id="newemp" name="newemp" required> <br>
+            <p class="lead"><button type="button" onClick="updatelist()" id="empButton" value="Submit">Submit</button></p>
+
+            <script>
+                // Create new employee
+                document.getElementById("empButton").addEventListener("click", async () => {
+                    try {
+                        await axios.post('/manager/addEmp', {
+                            name: document.getElementById("newemp").value,
+                            title: "Employee"
+                        })
+                        
+                        console.log("new employee created successfully")
+                        alert('Employee was successfully produced')
+                    } catch (error) {
+                        console.log(error)
+                        alert('What went wrong? Well find out.')
+                    }
+                })
+            </script>
         </div>
     </div>
-    
+
     <br>
     <div class="result">
 
@@ -76,16 +98,21 @@
             <p>Copyright &copy; 2021 &middot; All Rights Reserved &middot; Revature ERS</p>
         </div>
     </div>
-    
+
     <script>
         let dropdown = document.getElementById('employee-dropdown');
         dropdown.length = 0;
 
         let defaultOption = document.createElement('option');
-        defaultOption.text = 'Choose employee';
+        defaultOption.text = '-- select who wish to look up --';
+        defaultOption.disabled = true;
+        defaultOption.value = null;
+        defaultOption.selected = true;
+        // <option disabled selected value> -- select who you are -- </option>
 
         dropdown.add(defaultOption);
         dropdown.selectedIndex = 0;
+
         const url = '/manager/employees';
 
         const request = new XMLHttpRequest();
@@ -112,6 +139,17 @@
         };
 
         request.send();
+
+        //Update dropdown to reflect new entries
+        function updatelist() {
+            let emp = document.getElementById('newemp').value
+            let option = document.createElement('option');
+            option.id = emp;
+            option.text = emp;
+            option.value = emp;
+            dropdown.add(option);
+        }
+
         document.getElementById('employee-dropdown').addEventListener("change", store)
 
         function store() {
@@ -186,34 +224,34 @@
                 tableelm.innerHTML = 'No requests at this time!'
             }
         })
-        
 
-        function approve(id, status){
+
+        function approve(id, status) {
             // id = data[i]._id;
-            
-            try{
+
+            try {
                 const { data } = axios.put(`resolve/${id}/${status}`)
                 alert("Request successfully updated!")
             } catch (error) {
                 console.log(error)
                 alert('Something went wrong, please try again!')
             }
-            
+
         }
 
-        function deny(id, status) { 
+        function deny(id, status) {
             // id = data[i]._id;
-            
-            try{
+
+            try {
                 const { data } = axios.put(`resolve/${id}/${status}`)
                 alert("Request successfully updated!")
             } catch (error) {
                 console.log(error)
                 alert('Something went wrong, please try again!')
             }
-            
+
         }
-        
+
         // ---------------------------------------------------------All resolved requests ---------------------------------------------------------------
         document.getElementById("resolved").addEventListener("click", async () => {
             try {
