@@ -2,20 +2,21 @@
 // import 'regenerator-runtime/runtime';
 // import axios from 'axios';
 
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const path = require('path'); 
 const bodyParser = require('body-parser');;
 const {MongoClient} = require ('mongodb');
-const { readFileSync } = require('fs')
-const http = require('http')
-const mongod = require('mongodb')
+const { readFileSync } = require('fs');
+const http = require('http');
+const mongod = require('mongodb');
+
 // const axios = require('axios').default
 
-const port = process.env.PORT || 5000
-const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const port = process.env.PORT || 5000;
+const uri = process.env.MONGODB_URI; 
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true });
-const cors = require('cors') 
+const cors = require('cors'); 
 
 const { createRmb, 
     viewEmps, 
@@ -28,49 +29,49 @@ const { createRmb,
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
-app.use(express.urlencoded({extended: true}))
-app.use(express.json())
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
   }));
-app.use(cors())
+app.use(cors());
 // ----------------------------------------------HTML loading -----------------------------------------------------------------
 //index page
 app.get('/', (req, res) => {
     res.status(200).sendFile(path.resolve(__dirname, './html/index.html'))
-})
+});
 
 //emp home page
 app.get('/emphome', (req, res) => {
     res.status(200).sendFile(path.resolve(__dirname, './html/empHome.html'))
-})
+});
 
 //manager home page
 app.get('/manager', (req,res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/manHome.html'))
-})
+});
 
 //managers - view all pending requests
 app.get('/manager/pending', (req, res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/pending.html'))
 
-})
+});
 
 //managers - view all resolved requests
 app.get('/manager/resolved', (req, res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/resolved.html'))
-})
+});
 
 // view requests by employee
 app.get('/requests/:id',(req,res) =>{
     res.status(200).sendFile(path.resolve(__dirname, './html/empRequest.html'))
-})
+});
 
 // view all employees
 app.get('/employees',(req,res) =>{
     res.status(200).sendFile(path.resolve(__dirname, './html/employees.html'))
-})
+});
 
 
 
@@ -94,7 +95,7 @@ app.post('/emphome/newrmb', (req, res) => {
     } else {
         res.status(500).send('unable to create request')
     }
-})
+});
 
 //manager view all employees
 app.get('/manager/employees', (req, res) => { 
@@ -105,7 +106,7 @@ app.get('/manager/employees', (req, res) => {
             res.status(500).send('yikes')
         }
     })    
-})
+});
 
 //manager view all pending requests
 app.get('/pending', (req, res) => {
@@ -116,7 +117,7 @@ app.get('/pending', (req, res) => {
             res.status(500).send('YIKES!')
         }
     })
-})
+});
 
 //manager view all resolved requests
 app.get('/resolved', (req, res) => { 
@@ -127,7 +128,7 @@ app.get('/resolved', (req, res) => {
             res.status(500).send('yikeroni')
         }
     })
-})
+});
 
 //Manager view requests by employee name.
 app.get('/emprequests/:name', (req, res) => { 
@@ -139,7 +140,7 @@ app.get('/emprequests/:name', (req, res) => {
             res.status(500).send('yikerino')
         }
     })
-})
+});
 
 //Employee view their own pending requests
 app.get('/pending/:name', (req, res) => { 
@@ -151,7 +152,7 @@ app.get('/pending/:name', (req, res) => {
             res.status(500).send('error')
         }
     })
-})
+});
 
 //Employee view their own resolved requests
 app.get('/resolved/:name', (req, res) => { 
@@ -163,7 +164,7 @@ app.get('/resolved/:name', (req, res) => {
             res.status(500).send('error')
         }
     })
-})
+});
 
 //Manager update request status
 app.put('/resolve/:id/:status', (req, res) => {
@@ -178,7 +179,7 @@ app.put('/resolve/:id/:status', (req, res) => {
             res.status(500).send('oh yikes')
         }
     })
-})
+});
 
 app.put('/deny/:id', (req, res) => {
     //const id = req.params.id;
@@ -191,7 +192,7 @@ app.put('/deny/:id', (req, res) => {
             res.status(500).send('oh yikes')
         }
     })
-})
+});
 
 //Gabe's Wild exploration with sending information to Mongodb
 app.post('/empHome', function(req, res) {
@@ -210,7 +211,7 @@ app.post('/empHome', function(req, res) {
 //404 handling
 app.get('*', (req,res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
-})
+});
 
 app.listen(port, () => {
     try {
@@ -220,5 +221,5 @@ app.listen(port, () => {
     } finally {
         client.close();
     }
-    console.log('Server is listening on port 5000...')
-})
+    console.log(`Server is listening on port ${port}...`)
+});
