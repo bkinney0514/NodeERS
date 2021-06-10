@@ -42,11 +42,51 @@
       <h1 class="display-4">Revature ERS Deployment Site</h1>
       <p class="lead">The Expense Reimbursement System</p>
       <hr class="my-4">
-      <p>Are an Employee or a Manager?</p>
+      <p>Who are you?</p>
+      <script>
+         function SelectRedirect(){
+         const empname = document.getElementById('employee-dropdown').value
+         if (typeof (Storage) !== "undefined") {
+            //store emp name
+            localStorage.setItem("empname", empname);
+            console.log(localStorage.getItem("empname"))
+         } else {
+            //send to html page that says they need to use a browser with local storage support
+         }
+         // ON selection of section this function will work
+         //alert( document.getElementById('s1').value);
+         
+         switch(document.getElementById('employee-dropdown').value)
+         {
+         case "Brian":
+         window.location="../empHome";
+         break;
+         
+         case "Gabe":
+         window.location="../empHome";
+         break;
+         
+         case "Will":
+         window.location="../manager";
+         break;
+      
+         
+         /// Can be extended to other different selections of SubCategory //////
+         default:
+         window.location="../"; // if no selection matches then redirected to home page
+         break;
+         }// end of switch 
+         }
+         </script>
       <p class="lead">
-         <select id="employee-dropdown" name="user">
+         <select id="employee-dropdown" name="user" onchange="SelectRedirect();">
+            <option disabled selected value> -- select who you are -- </option>
+            <option value="Brian">Brian</option>
+            <option value="Gabe">Gabe</option>
+            <option value="Will">Will</option>
          </select>
-         <script>
+         <!-- SCRIPT FOR POPULATING DROPDOWN MENU -->
+         <!-- <script>
             let dropdown = document.getElementById('employee-dropdown');
             dropdown.length = 0;
 
@@ -81,9 +121,12 @@
             };
 
             request.send();
-         </script>
-         <a class="badge badge-info" href="empHome" role="button">Employee</a>
-         <a class="badge badge-danger" href="manager" role="button">Manager</a>
+         </script> -->
+
+         <!-- Need a login function if value = Will then manHome, else empHome -->
+         <a class="badge badge-info" href="empHome" role="button">Login</a>
+
+         <!-- <a class="badge badge-danger" href="manager" role="button">Manager</a> -->
       </p>
    </div>
 
@@ -100,18 +143,18 @@
    </div>
    <script>
       document.getElementById('employee-dropdown').addEventListener("change", store)
-      function store() { 
+      function store() {
          const empname = document.getElementById('employee-dropdown').value
-         if(typeof(Storage) !== "undefined") { 
+         if (typeof (Storage) !== "undefined") {
             //store emp name
             localStorage.setItem("empname", empname);
             console.log(localStorage.getItem("empname"))
-         } else { 
+         } else {
             //send to html page that says they need to use a browser with local storage support
          }
       }
-      
-</script>
+
+   </script>
 </body>
 
 </html>

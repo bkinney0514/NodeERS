@@ -44,6 +44,12 @@ function viewEmps(client) {
     return results; 
 }
 
+function clearDB(client){
+    const results = client.db(data).collection(rmbcoll).deleteMany({ });
+    console.log(`${results.deletedCount} documents were deleted`)
+    return results;
+}
+
 function viewPending(client) { 
     const results = client.db(data).collection(rmbcoll).find
     ({ status: "pending" }).toArray()
@@ -104,6 +110,8 @@ function resolve(client, id, newStatus){
 
 
 
+
+
 module.exports = { createRmb, 
     viewEmps, 
     viewPending, 
@@ -111,4 +119,5 @@ module.exports = { createRmb,
     viewEmpRequests,
     empViewPending,
     empViewResolved,
-    resolve }
+    resolve,
+    clearDB }

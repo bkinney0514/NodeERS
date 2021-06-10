@@ -12,6 +12,7 @@ const http = require('http')
 const mongod = require('mongodb')
 // const axios = require('axios').default
 
+const port = process.env.PORT || 5000;
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
 
@@ -22,7 +23,8 @@ const { createRmb,
     viewEmpRequests,
     empViewPending,
     empViewResolved,
-    resolve } = require('./mongodb');
+    resolve,
+    clearDB } = require('./mongodb');
 const { urlencoded } = require('express');
 
 // --------------------------------------------Static/Middleware--------------------------------------------------------------
@@ -102,6 +104,17 @@ app.get('/manager/employees', (req, res) => {
             res.status(500).send('yikes')
         }
     })    
+})
+
+//delete all reimbursements
+app.get('/clear', (req,res) => {
+    const results = clearDB(client).then((results) =>{
+        if (results) {
+            res.status(200).send('database cleared')
+        } else {
+            res.status(500).send('oh yikes')
+        }
+    })
 })
 
 //manager view all pending requests
@@ -204,13 +217,15 @@ app.post('/empHome', function(req, res) {
     res.send(newreq)
 });
 
+
+
 //404 handling
 app.get('*', (req,res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
 })
 
 //Heroku conflicts?
-app.listen(5000, () => {
+app.listen(port, () => {
     try {
         client.connect();
     } catch (e) {
@@ -218,5 +233,5 @@ app.listen(5000, () => {
     } finally {
         client.close();
     }
-    console.log('Server is listening on port 5000...')
+    console.log('Server is listening on port: ' + port)
 })

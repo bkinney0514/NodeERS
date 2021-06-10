@@ -137,8 +137,10 @@
                     reason: document.getElementById("reason").value
                 })
                 console.log("new rmb created successfully")
+                alert('Reimbursement was successfully requested')
             } catch (error) { 
                 console.log(error)
+                alert('Something went wrong, please try again')
             }
         })
         
