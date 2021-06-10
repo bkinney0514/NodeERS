@@ -14,7 +14,7 @@ const mongod = require('mongodb');
 // const axios = require('axios').default
 
 const port = process.env.PORT || 5000;
-const uri = process.env.MONGODB_URI; 
+const uri = process.env.MONGODB_URI || "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"; 
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true });
 const cors = require('cors'); 
 
