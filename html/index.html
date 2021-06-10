@@ -77,56 +77,10 @@
          }
       </script>
       <p class="lead">
-<<<<<<< HEAD
-         <select id="employee-dropdown" name="user">
-            <option>Choose Employee</option>
-            <option value="Brian">Brian - Employee</option>
-            <option value="Gabe">Gabe - Employee</option>
-            <option vale="Will">Will - Manager</option>
-=======
          <select id="employee-dropdown" name="user" onchange="SelectRedirect();">
->>>>>>> 89792083181f4ab397a9b017024f37db10a18b24
          </select>
          <!-- SCRIPT FOR POPULATING DROPDOWN MENU -->
          <script>
-<<<<<<< HEAD
-            // let dropdown = document.getElementById('employee-dropdown');
-            // dropdown.length = 0;
-
-            // let defaultOption = document.createElement('option');
-            // defaultOption.text = 'Choose employee';
-
-            // dropdown.add(defaultOption);
-            // dropdown.selectedIndex = 0;
-
-
-            // const url = '/manager/employees';
-
-            // const request = new XMLHttpRequest();
-            // request.open('GET', url, true);
-
-            // request.onload = function () {
-            //    if (request.status === 200) {
-            //       const data = JSON.parse(request.responseText);
-            //       let option;
-            //       for (let i = 0; i < data.length; i++) {
-            //          option = document.createElement('option');
-            //          option.id = data[i].name;
-            //          option.text = data[i].name;
-            //          option.value = data[i].name;
-            //          dropdown.add(option);
-            //       }
-            //    } else {
-            //       // Reached the server, but it returned an error
-            //    }
-            // }
-
-            // request.onerror = function () {
-            //    console.error('An error occurred fetching the JSON from ' + url);
-            // };
-
-            // request.send();
-=======
             let dropdown = document.getElementById('employee-dropdown');
             dropdown.length = 0;
 
@@ -163,7 +117,6 @@
             };
 
             request.send();
->>>>>>> 89792083181f4ab397a9b017024f37db10a18b24
          </script>
 
          <!-- Need a login function if value = Will then manHome, else empHome -->

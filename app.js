@@ -251,10 +251,5 @@ app.listen(port, () => {
     } finally {
         client.close();
     }
-<<<<<<< HEAD
-    console.log(`Server is listening on port ${port}...`)
-});
-=======
     console.log('Server is listening on port: ' + port)
 })
->>>>>>> 89792083181f4ab397a9b017024f37db10a18b24
