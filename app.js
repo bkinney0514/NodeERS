@@ -12,7 +12,7 @@ const http = require('http')
 const mongod = require('mongodb')
 // const axios = require('axios').default
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000
 const uri = "mongodb+srv://rmb:rmbpass@testdb.rfocg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true }); 
 
@@ -224,7 +224,6 @@ app.get('*', (req,res) => {
     res.status(200).sendFile(path.resolve(__dirname, './html/404.html'))
 })
 
-//Heroku conflicts?
 app.listen(port, () => {
     try {
         client.connect();
