@@ -45,42 +45,48 @@
       <p>Are an Employee or a Manager?</p>
       <p class="lead">
          <select id="employee-dropdown" name="user">
+            <option>Choose Employee</option>
+            <option value="Brian">Brian - Employee</option>
+            <option value="Gabe">Gabe - Employee</option>
+            <option vale="Will">Will - Manager</option>
          </select>
          <script>
-            let dropdown = document.getElementById('employee-dropdown');
-            dropdown.length = 0;
+            // let dropdown = document.getElementById('employee-dropdown');
+            // dropdown.length = 0;
 
-            let defaultOption = document.createElement('option');
-            defaultOption.text = 'Choose employee';
+            // let defaultOption = document.createElement('option');
+            // defaultOption.text = 'Choose employee';
 
-            dropdown.add(defaultOption);
-            dropdown.selectedIndex = 0;
-            const url = '/manager/employees';
+            // dropdown.add(defaultOption);
+            // dropdown.selectedIndex = 0;
 
-            const request = new XMLHttpRequest();
-            request.open('GET', url, true);
 
-            request.onload = function () {
-               if (request.status === 200) {
-                  const data = JSON.parse(request.responseText);
-                  let option;
-                  for (let i = 0; i < data.length; i++) {
-                     option = document.createElement('option');
-                     option.id = data[i].name;
-                     option.text = data[i].name;
-                     option.value = data[i].name;
-                     dropdown.add(option);
-                  }
-               } else {
-                  // Reached the server, but it returned an error
-               }
-            }
+            // const url = '/manager/employees';
 
-            request.onerror = function () {
-               console.error('An error occurred fetching the JSON from ' + url);
-            };
+            // const request = new XMLHttpRequest();
+            // request.open('GET', url, true);
 
-            request.send();
+            // request.onload = function () {
+            //    if (request.status === 200) {
+            //       const data = JSON.parse(request.responseText);
+            //       let option;
+            //       for (let i = 0; i < data.length; i++) {
+            //          option = document.createElement('option');
+            //          option.id = data[i].name;
+            //          option.text = data[i].name;
+            //          option.value = data[i].name;
+            //          dropdown.add(option);
+            //       }
+            //    } else {
+            //       // Reached the server, but it returned an error
+            //    }
+            // }
+
+            // request.onerror = function () {
+            //    console.error('An error occurred fetching the JSON from ' + url);
+            // };
+
+            // request.send();
          </script>
          <a class="badge badge-info" href="empHome" role="button">Employee</a>
          <a class="badge badge-danger" href="manager" role="button">Manager</a>
