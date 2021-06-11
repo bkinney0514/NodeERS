@@ -55,26 +55,26 @@ app.get('/manager', (req,res) => {
     res.status(200).sendFile(path.resolve(__dirname, './html/manHome.html'))
 });
 
-//managers - view all pending requests
-app.get('/manager/pending', (req, res) => { 
-    res.status(200).sendFile(path.resolve(__dirname, './html/pending.html'))
+// //managers - view all pending requests
+// app.get('/manager/pending', (req, res) => { 
+//     res.status(200).sendFile(path.resolve(__dirname, './html/pending.html'))
 
-});
+// });
 
-//managers - view all resolved requests
-app.get('/manager/resolved', (req, res) => { 
-    res.status(200).sendFile(path.resolve(__dirname, './html/resolved.html'))
-});
+// //managers - view all resolved requests
+// app.get('/manager/resolved', (req, res) => { 
+//     res.status(200).sendFile(path.resolve(__dirname, './html/resolved.html'))
+// });
 
-// view requests by employee
-app.get('/requests/:id',(req,res) =>{
-    res.status(200).sendFile(path.resolve(__dirname, './html/empRequest.html'))
-});
+// // view requests by employee
+// app.get('/requests/:id',(req,res) =>{
+//     res.status(200).sendFile(path.resolve(__dirname, './html/empRequest.html'))
+// });
 
-// view all employees
-app.get('/employees',(req,res) =>{
-    res.status(200).sendFile(path.resolve(__dirname, './html/employees.html'))
-});
+// // view all employees
+// app.get('/employees',(req,res) =>{
+//     res.status(200).sendFile(path.resolve(__dirname, './html/employees.html'))
+// });
 
 
 
