@@ -3,7 +3,7 @@
 This project was generated with [Node.js](https://nodejs.org/en/).
 
 ## Development server
-Run `npm please run` for a dev server. Navigate to `http://localhost:5000/`. The app will make changes accordingly from any of the source files after a refresh from the webpage.
+Run `npm run please` for a dev server. Navigate to `http://localhost:5000/`. The app will make changes accordingly from any of the source files after a refresh from the webpage.
 
 ## Product Document
 
