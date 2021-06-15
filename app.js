@@ -39,6 +39,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
   }));
 app.use(cors());
+
 // ----------------------------------------------HTML loading -----------------------------------------------------------------
 //index page
 app.get('/', (req, res) => {
@@ -54,28 +55,6 @@ app.get('/emphome', (req, res) => {
 app.get('/manager', (req,res) => { 
     res.status(200).sendFile(path.resolve(__dirname, './html/manHome.html'))
 });
-
-// //managers - view all pending requests
-// app.get('/manager/pending', (req, res) => { 
-//     res.status(200).sendFile(path.resolve(__dirname, './html/pending.html'))
-
-// });
-
-// //managers - view all resolved requests
-// app.get('/manager/resolved', (req, res) => { 
-//     res.status(200).sendFile(path.resolve(__dirname, './html/resolved.html'))
-// });
-
-// // view requests by employee
-// app.get('/requests/:id',(req,res) =>{
-//     res.status(200).sendFile(path.resolve(__dirname, './html/empRequest.html'))
-// });
-
-// // view all employees
-// app.get('/employees',(req,res) =>{
-//     res.status(200).sendFile(path.resolve(__dirname, './html/employees.html'))
-// });
-
 
 
 //// ----------------------------------------------CRUD operations --------------------------------------------------------------
@@ -213,19 +192,6 @@ app.put('/resolve/:id/:status', (req, res) => {
         }
     })
 });
-
-// app.put('/deny/:id', (req, res) => {
-//     //const id = req.params.id;
-//     const id = mongod.ObjectID(req.params.id)
-//     // const newStatus = 'approved';
-//     const result = resolve(client, id, {status: 'approved'}).then((result) =>{
-//         if (result) {
-//             res.status(200).send(result)
-//         } else {
-//             res.status(500).send('oh yikes')
-//         }
-//     })
-// })
 
 //delete all reimbursements
 app.get('/clear', (req,res) => {
